@@ -1,0 +1,130 @@
+<html>
+
+<head>
+  <title>Ticket</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+  <script src="js/app.js"></script>
+</head>
+
+<body>
+  <h2>Ticket</h2>
+  <div ng-app="mainApp" ng-controller="lotteryController">
+    <div>
+      <div class="col-md-3">
+        <select id="type" class="selectpicker">
+        <option value="lottery_ticket">Lottery Ticket</option>
+        <option value="raffle_ticket">Raffle Ticket</option>
+      </select>
+      </div>
+      <div class="col-md-3">
+        <select id="key" class="selectpicker">
+        <option value="saturday_lotto">Saturday Lotto</option>
+        <option value="oz_lotto">OZ Lotto</option>
+        <option value="powerball">Powerball</option>
+        <option value="mater_prize_home">Mater prize home</option>
+        <option value="surf_lifesavers">Surf Lifesavers</option>
+        <option value="endeavour_foundation">Endeavour Foundation</option>
+        <option value="super_jackpot_lottery">Super Jackpot Lottery</option>
+        <option value="the_pools">The Pools</option>
+        <option value="lotto_strike">Lotto Strike</option>
+        <option value="monday_lotto">Monday Lotto</option>
+        <option value="wednesday_lotto">Wednesday Lotto</option>
+        <option value="mega_jackpot_lottery">Mega Jackpot Lottery</option>
+        <option value="act_for_kids">Act for Kids</option>
+        <option value="prince_of_wales_hospital_foundation">Prince of Wales Hospital Foundation</option>
+        <option value="kidney_health_australia">Kidney Health Australia</option>
+        <option value="endeavour_golden_rewards">Endeavour Golden Rewards</option>
+      </select>
+      </div>
+      <div class="col-md-3">
+        <button type="button" class="btn btn-success" ng-click="submit()">Submit</button>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <form>
+        <div class="form-group">
+          <label for="ticketName">Ticket Name</label>
+          <input type="text" class="form-control" id="ticketName" ng-model="ticket.result[0].name">
+        </div>
+        <div class="form-group" ng-if="ticket.result[0].game_types.length > 0">
+          <label for="gameTypes">Game Types</label>
+          <div ng-repeat="gameType in ticket.result[0].game_types">
+            <form>
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" ng-model="gameType.name">
+              </div>
+              <div class="form-group">
+                <label for="desc">Description</label>
+                <input type="text" class="form-control" id="desc" ng-model="gameType.description">
+              </div>
+              <label for="gameOffers" ng-if="gameType.game_offers.length > 0">Game Offers</label>
+              <table class="table table-striped" ng-if="gameType.game_offers.length > 0">
+                <th width="20px">Name</th>
+                <th width="60px">Description</th>
+                <th width="20px">Price</th>
+                <tr ng-repeat="gameOffer in gameType.game_offers">
+                  <td>{{gameOffer.name}}</td>
+                  <td>{{gameOffer.description}}</td>
+                  <td>{{gameOffer.price.currency}} {{gameOffer.price.amount}}</td>
+                </tr>
+              </table>
+            </form>
+          </div>
+        </div>
+        <div ng-if="ticket.result[0].type == 'raffle_ticket'">
+          <form>
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" ng-model="ticket.result[0].lottery.name">
+            </div>
+            <div class="form-group">
+              <label for="desc">Description</label>
+              <input type="text" class="form-control" id="desc" ng-model="ticket.result[0].lottery.desc">
+            </div>
+            <div class="form-group">
+              <label for="type">Type</label>
+              <input type="text" class="form-control" id="type" ng-model="ticket.result[0].lottery.type">
+            </div>
+            <table class="table table-striped">
+              <th>Draw Name</th>
+              <th>Draw Description</th>
+              <th>Prize Name</th>
+              <th>Prize Description</th>
+              <th>Value</th>
+              <tr>
+                <td>{{ticket.result[0].draw.name}}</td>
+                <td>{{ticket.result[0].draw.description}}</td>
+                <td>{{ticket.result[0].draw.prize.name}}</td>
+                <td>{{ticket.result[0].draw.prize.description}}</td>
+                <td>{{ticket.result[0].draw.prize.value.currency}} {{ticket.result[0].draw.prize.value.amount}}</td>
+              </tr>
+            </table>
+            <label for="offers" ng-if="ticket.result[0].draw.offers.length > 0">Offers</label>
+            <table class="table table-striped">
+              <th>Name</th>
+              <th>Number of tickets</th>
+              <th>Price</th>
+              <th>Price per ticket</th>
+              <tr ng-repeat="offer in ticket.result[0].draw.offers">
+                <td>{{offer.name}}</td>
+                <td>{{offer.num_tickets}}</td>
+                <td>{{offer.price.currency}} {{offer.price.amount}}</td>
+                <td>{{offer.price_per_ticket.currency}} {{offer.price_per_ticket.amount}}</td>
+              </tr>
+            </table>
+          </form>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>
